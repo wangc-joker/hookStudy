@@ -9,9 +9,7 @@ import android.os.Handler;
 
 import com.example.hook.utils.TextLogUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
-import java.sql.Ref;
 
 public final class HookHelper {
 
@@ -31,7 +29,7 @@ public final class HookHelper {
             Class<?> iActivityManagerInterface = Class.forName("android.app.IActivityManager");
 
             Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),new Class<?>[]{iActivityManagerInterface}
-            ,new HookHandler(mInstanceField));
+            ,new HookAMProxy(mInstanceField));
 
             RefInvoke.setFieldObject("android.util.Singleton",gDefault,"mInstance",proxy);
         } catch (Exception e) {
@@ -39,7 +37,7 @@ public final class HookHelper {
         }
     }
 
-    public static void hookPackageManager(Context context) {
+    public static void hookPackageManager() {
         try {
             //获取ActivityThread对象
             Object currentActivityThread = RefInvoke.getStaticFieldObject(
@@ -60,7 +58,7 @@ public final class HookHelper {
             Object proxy = Proxy.newProxyInstance(
                     iPackageManagerInterface.getClassLoader(),
                     new Class<?>[]{iPackageManagerInterface},
-                    new HookHandler(sPackageManager)
+                    new HookPMProxy(sPackageManager)
             );
 
 
@@ -69,14 +67,8 @@ public final class HookHelper {
                     currentActivityThread,"sPackageManager",proxy);
 
             //替换ApplicationPackageManager里面的mPM
-            PackageManager pm = context.getPackageManager();
-            RefInvoke.setFieldObject(pm,"mPM",proxy);
-            if (MainActivity.getInstance() != null) {
-                Field[] fs = sPackageManager.getClass().getDeclaredFields();
-                for(Field f:fs){
-                    TextLogUtil.textLog(f.getName()+"\n");
-                }
-            }
+//            PackageManager pm = context.getPackageManager();
+////            RefInvoke.setFieldObject(pm,"mPM",proxy);
         } catch (Exception e) {
             TextLogUtil.textLog(e.getMessage());
         }

@@ -19,7 +19,10 @@ public class MainActivity extends AppCompatActivity {
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
 //        HookHelper.hookActivityManager();
+        HookHelper.hookActivityManager();
 
+//        HookHelper.hookMH();
+        HookHelper.hookActivityThreadInsrtumentation();
     }
 
     @Override
@@ -28,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.text);
         mainActivity = this;
-        HookHelper.hookActivityManager();
-        HookHelper.hookMH();
+
         setAction();
     }
 

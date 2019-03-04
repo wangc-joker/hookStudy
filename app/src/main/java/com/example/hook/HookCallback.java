@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.hook.utils.TextLogUtil;
-
 public class HookCallback implements Handler.Callback {
 
     private Handler mBase;
@@ -35,9 +33,9 @@ public class HookCallback implements Handler.Callback {
 
         //把替身恢复成真身
         Intent intent = (Intent) RefInvoke.getFieldObject(object,"intent");
-
+//        HookHelper.hookPackageManager();
         Intent targetIntent = intent.getParcelableExtra(HookHelper.EXTRA_TARGET_INTENT);
         intent.setComponent(targetIntent.getComponent());
-        TextLogUtil.textLog("把替身恢复成真身:"+targetIntent);
+//        TextLogUtil.textLog("把替身恢复成真身:"+targetIntent);
     }
 }

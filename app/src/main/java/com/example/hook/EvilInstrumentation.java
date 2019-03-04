@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.example.hook.utils.TextLogUtil;
 
@@ -23,7 +24,6 @@ public class EvilInstrumentation extends Instrumentation {
     public ActivityResult execStartActivity(
             Context who, IBinder contextThread, IBinder token, Activity target,
             Intent intent, int requestCode, Bundle options) {
-        TextLogUtil.textLog("王聪到此有一游");
 
         Class[] p1 = {
                 Context.class,
@@ -51,8 +51,14 @@ public class EvilInstrumentation extends Instrumentation {
                                 Intent intent)
             throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
-        TextLogUtil.textLog("我hook 了 newActivity方法");
-        return mBase.newActivity(cl,className,intent);
+
+        Intent rawIntent = intent.getParcelableExtra(HookHelper.EXTRA_TARGET_INTENT);
+        if (rawIntent == null) {
+            return mBase.newActivity(cl,className,intent);
+        }
+        Log.d("cong","className:"+className+" rawItent:"+rawIntent);
+        String newClassName = rawIntent.getComponent().getClassName();
+        return mBase.newActivity(cl,newClassName,null);
     }
 
     public void callActivityOnCreate(Activity activity, Bundle icicle) {

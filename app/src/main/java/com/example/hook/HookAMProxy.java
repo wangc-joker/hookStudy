@@ -8,13 +8,13 @@ import com.example.hook.utils.TextLogUtil;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-public class HookHandler implements InvocationHandler {
+public class HookAMProxy implements InvocationHandler {
 
-    private static final String TAG = "HookHandler";
+    private static final String TAG = "HookAMProxy";
 
     private Object mBase;
 
-    public HookHandler(Object base){
+    public HookAMProxy(Object base){
         this.mBase = base;
     }
 
@@ -52,7 +52,6 @@ public class HookHandler implements InvocationHandler {
 
             TextLogUtil.textLog("wangcong hook success");
 
-            return method.invoke(mBase,args);
         }
         return method.invoke(mBase,args);
     }
